@@ -16,5 +16,19 @@ async def ping(ctx):
 @bot.command()
 async def neko(ctx):
     await ctx.send('にゃ～ん')
+    
+@bot.command() 
+async def join(ctx):
+    """Botをボイスチャンネルに入室させます。"""
+    voice_state = ctx.author.voice
 
+    if (not voice_state) or (not voice_state.channel):
+        #もし送信者がどこのチャンネルにも入っていないなら
+        await ctx.send("先にボイスチャンネルに入っている必要があります。")
+        return
+
+    channel = voice_state.channel #送信者のチャンネル
+
+    await channel.connect() #VoiceChannel.connect()を使用
+    
 bot.run(token)
