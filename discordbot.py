@@ -13,36 +13,6 @@ async def on_command_error(ctx, error):
 async def ping(ctx):
     await ctx.send('pong')
 
-
-@bot.command()
-async def neko(ctx):
-    await ctx.send('にゃ～ん')
-    
-@bot.command() 
-async def join(ctx):
-    """Botをボイスチャンネルに入室させます。"""
-    voice_state = ctx.author.voice
-
-    if (not voice_state) or (not voice_state.channel):
-        #もし送信者がどこのチャンネルにも入っていないなら
-        await ctx.send("先にボイスチャンネルに入っている必要があります。")
-        return
-
-    channel = voice_state.channel #送信者のチャンネル
-
-    await channel.connect() #VoiceChannel.connect()を使用
-@bot.command()
-async def leave(ctx):
-    """Botをボイスチャンネルから切断します。"""
-    voice_client = ctx.message.guild.voice_client
-
-    if not voice_client:
-        await ctx.send("Botはこのサーバーのボイスチャンネルに参加していません。")
-        return
-
-    await voice_client.disconnect()
-    await ctx.send("ボイスチャンネルから切断しました。")
-    
 @bot.command()
 async def play(ctx):
     if ctx.author.voice is None:
@@ -63,6 +33,11 @@ async def play(ctx):
             return
         else:
             await ctx.send("ファイルを添付してください")
-
+            
+#ボイスチャンネルから切断
+@client.command()
+async def leave(message):
+    await message.guild.voice_client.disconnect()
+    await message.channel.send("切断しました")
     
 bot.run(token)
