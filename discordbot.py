@@ -42,24 +42,26 @@ async def leave(ctx):
     await voice_client.disconnect()
     await ctx.send("ボイスチャンネルから切断しました。")
     
-@bot.command()
+@client.command()
 async def play(ctx):
-    """指定された音声ファイルを流します。"""
-    voice_client = ctx.message.guild.voice_client
-
-    if not voice_client:
-        await ctx.send("Botはこのサーバーのボイスチャンネルに参加していません。")
+    if ctx.author.voice is None:
+        await ctx.send("いずれかのボイスチャンネルに接続してください")
         return
+    else:
+        await ctx.author.voice.channel.connect()
+        voice_client = ctx.message.guild.voice_client
+        if not voice_client:
+            await ctx.send("ボイスチャンネルの接続に失敗しました")
+            return
+        if ctx.message.attachments:
+            await ctx.send("添付された曲を再生します")
+            await ctx.message.attachments[0].save("tmp.mp3")
+            music = "tmp.mp3"
+            ffmpeg_audio_source = discord.FFmpegPCMAudio(music)
+            voice_client.play(ffmpeg_audio_source)
+            return
+        else:
+            await ctx.send("ファイルを添付してください")
 
-    if not ctx.message.attachments:
-        await ctx.send("ファイルが添付されていません。")
-        return
-
-    await ctx.message.attachments[0].save("tmp.mp3")
-
-    ffmpeg_audio_source = discord.FFmpegPCMAudio("tmp.mp3")
-    voice_client.play(ffmpeg_audio_source)
-
-    await ctx.send("再生しました。")
     
 bot.run(token)
