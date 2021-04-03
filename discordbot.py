@@ -42,7 +42,7 @@ async def leave(ctx):
     await voice_client.disconnect()
     await ctx.send("ボイスチャンネルから切断しました。")
     
-@client.command()
+@bot.command()
 async def play(ctx):
     if ctx.author.voice is None:
         await ctx.send("いずれかのボイスチャンネルに接続してください")
