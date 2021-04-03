@@ -30,5 +30,16 @@ async def join(ctx):
     channel = voice_state.channel #送信者のチャンネル
 
     await channel.connect() #VoiceChannel.connect()を使用
+@bot.command()
+async def leave(ctx):
+    """Botをボイスチャンネルから切断します。"""
+    voice_client = ctx.message.guild.voice_client
+
+    if not voice_client:
+        await ctx.send("Botはこのサーバーのボイスチャンネルに参加していません。")
+        return
+
+    await voice_client.disconnect()
+    await ctx.send("ボイスチャンネルから切断しました。")
     
 bot.run(token)
